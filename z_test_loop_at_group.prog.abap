@@ -34,7 +34,9 @@ CLASS controller IMPLEMENTATION.
                                      GROUP BY ( arbgb = ls_t100-arbgb
                                                 msgnr = ls_t100-msgnr )
                                      FOR <ls_t100> IN GROUP group
-                                     NEXT result = VALUE #( position = result-position && |\n{ <ls_t100>-text }| ) ). " <=== difference here
+                                     NEXT result = VALUE #( BASE result
+                                                            position = result-position && |\n{ <ls_t100>-text }| ) ). " <=== solution with base
+*                                     NEXT result = VALUE #( position = result-position && |\n{ <ls_t100>-text }| ) ). " <=== difference here
 
     DATA(output2) = REDUCE ty_output( INIT result = VALUE ty_output( )
                                       FOR GROUPS group OF ls_t100 IN t100_tab
@@ -44,8 +46,8 @@ CLASS controller IMPLEMENTATION.
                                       FOR <ls_t100> IN GROUP group
                                       NEXT result-position = result-position && |\n{ <ls_t100>-text }| ). " <=== difference here
 
-    " fails:
-*    ASSERT output = output2.
+    " fails no longer:
+    ASSERT output = output2.
 
     cl_demo_output=>write( output-position ).
     cl_demo_output=>write( output2-position ).
